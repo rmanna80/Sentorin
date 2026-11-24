@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Pressable, Text } from "react-native";
 import { Device, supabase } from "./supabase";
-import { Btn, Card, Err, Field, H, Muted, c } from "./ui";
+import { Btn, Card, Err, Field, H, Muted, useC } from "./ui";
 
 export default function Devices({ onOpen }: { onOpen: (d: Device) => void }) {
+  const c = useC();
   const [devices, setDevices] = useState<Device[]>([]);
   const [publicId, setPublicId] = useState(""); const [code, setCode] = useState(""); const [msg, setMsg] = useState("");
 
@@ -40,7 +41,7 @@ export default function Devices({ onOpen }: { onOpen: (d: Device) => void }) {
         <Err>{msg}</Err>
         <Btn title="Add device" onPress={claim} disabled={!publicId || !code} />
       </Card>
-      <Btn title="Sign out" kind="secondary" onPress={() => supabase.auth.signOut()} />
+      
     </>
   );
 }

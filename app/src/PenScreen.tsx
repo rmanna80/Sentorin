@@ -3,7 +3,7 @@ import { PermissionsAndroid, Platform, Switch, Text, View } from "react-native";
 import { BleManager } from "react-native-ble-plx";
 import * as Location from "expo-location";
 import { Device, has, supabase } from "./supabase";
-import { Btn, Card, Err, Field, H, Muted, c } from "./ui";
+import { Btn, Card, Err, Field, H, Muted, useC } from "./ui";
 
 // Must match firmware/src/main.c
 export const SENTORIN_SERVICE_UUID = "7e570001-5a4e-4f52-8a11-53454e544f52";
@@ -21,6 +21,7 @@ function proximity(rssi: number) {
 }
 
 export default function PenScreen({ device, onChanged }: { device: Device; onChanged: () => void }) {
+  const c = useC();
   const [card, setCard] = useState<CardRow>(EMPTY); const [msg, setMsg] = useState(""); const [saved, setSaved] = useState(false);
   const [status, setStatus] = useState(device.status);
   const [scanning, setScanning] = useState(false); const [rssi, setRssi] = useState<number | null>(null);

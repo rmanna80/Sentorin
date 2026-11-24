@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Text, View } from "react-native";
 import { Device, supabase } from "./supabase";
-import { Btn, Card, Err, Field, H, Muted, c } from "./ui";
+import { Btn, Card, Err, Field, H, Muted, useC } from "./ui";
 
 const FIELDS = [["full_name", "Name", false], ["blood_type", "Blood type", true], ["allergies", "Allergies", true], ["medications", "Medications", true],
   ["conditions", "Conditions", true], ["emergency_contact_name", "Emergency contact", true], ["emergency_contact_phone", "Emergency contact phone", true],
@@ -10,6 +10,7 @@ type Key = (typeof FIELDS)[number][0];
 type LogRow = { id: number; accessed_at: string; responder_code: string | null };
 
 export default function BraceletScreen({ device }: { device: Device }) {
+  const c = useC();
   const [values, setValues] = useState<Record<Key, string>>(Object.fromEntries(FIELDS.map(([k]) => [k, ""])) as Record<Key, string>);
   const [publicFields, setPublicFields] = useState<string[]>([]);
   const [log, setLog] = useState<LogRow[]>([]); const [msg, setMsg] = useState(""); const [saved, setSaved] = useState(false);

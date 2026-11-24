@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.sentorin.app",
@@ -26,7 +26,8 @@
       "permissions": [
         "android.permission.BLUETOOTH_SCAN",
         "android.permission.BLUETOOTH_CONNECT",
-        "android.permission.ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.NFC"
       ]
     },
     "web": {
@@ -46,6 +47,13 @@
         "expo-location",
         {
           "locationWhenInUsePermission": "Sentorin saves where your pen was last seen."
+        }
+      ],
+      [
+        "react-native-nfc-manager",
+        {
+          "nfcPermission": "Sentorin reads Sentorin pens and bracelets you tap.",
+          "includeNdefEntitlement": true
         }
       ]
     ]
