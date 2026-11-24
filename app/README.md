@@ -1,6 +1,11 @@
 # Owner app (Expo, iPhone + Android)
 
     npm install
+
+Quick look on any phone (no Bluetooth or NFC): install Expo Go, then `npx expo start --go` and scan the QR code.
+
+Full build (Bluetooth + NFC):
+
     npx expo install --fix      # aligns library versions with the Expo SDK
     npx expo run:android        # or run:ios  (Bluetooth needs a development build, not Expo Go)
 

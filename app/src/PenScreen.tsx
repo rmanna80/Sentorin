@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { PermissionsAndroid, Platform, Switch, Text, View } from "react-native";
-import { BleManager } from "react-native-ble-plx";
+import type { BleManager } from "react-native-ble-plx";
 import * as Location from "expo-location";
 import { Device, has, supabase } from "./supabase";
 import { Btn, Card, Err, Field, H, Muted, useC } from "./ui";
@@ -66,9 +66,14 @@ export default function PenScreen({ device, onChanged }: { device: Device; onCha
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN, PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT, PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION]);
       if (Object.values(res).some((r) => r !== PermissionsAndroid.RESULTS.GRANTED)) return setMsg("Bluetooth permission is needed to find the pen.");
     }
-    ble.current ??= new BleManager();
+    if (!ble.current) {
+      // Loaded on demand: Bluetooth only exists in a full build, not in Expo Go.
+      try { const { BleManager: Manager } = require("react-native-ble-plx"); ble.current = new Manager() as BleManager; }
+      catch { return setMsg("Bluetooth finding needs the full app build. It is not available in Expo Go."); }
+    }
+    const manager = ble.current;
     setScanning(true); setRssi(null);
-    ble.current.startDeviceScan([SENTORIN_SERVICE_UUID], { allowDuplicates: true }, (error, found) => {
+    manager.startDeviceScan([SENTORIN_SERVICE_UUID], { allowDuplicates: true }, (error, found) => {
       if (error) { setMsg(error.message); setScanning(false); return; }
       if (found && (found.localName ?? found.name) === advertisedName(device.public_id) && found.rssi != null) {
         setRssi(found.rssi); recordSighting();

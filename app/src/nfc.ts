@@ -1,4 +1,4 @@
-import NfcManager, { Ndef, NfcTech } from "react-native-nfc-manager";
+import type NfcManagerType from "react-native-nfc-manager";
 
 /** Accepts a full tap link (…?d=ID) or a bare device ID. */
 export function publicIdFromLink(text: string): string | null {
@@ -10,7 +10,15 @@ export function publicIdFromLink(text: string): string | null {
 
 /** Waits for a tag, reads its link and returns the device ID in it (null if the tag is not a Sentorin tag). */
 export async function readTagPublicId(): Promise<string | null> {
-  if (!(await NfcManager.isSupported())) throw new Error("This phone cannot read NFC tags.");
+  // Loaded on demand: NFC only exists in a full build, not in Expo Go.
+  let NfcManager: typeof NfcManagerType, Ndef: typeof import("react-native-nfc-manager").Ndef, NfcTech: typeof import("react-native-nfc-manager").NfcTech;
+  try {
+    const mod = require("react-native-nfc-manager") as typeof import("react-native-nfc-manager");
+    NfcManager = mod.default; Ndef = mod.Ndef; NfcTech = mod.NfcTech;
+    if (!(await NfcManager.isSupported())) throw new Error("unsupported");
+  } catch {
+    throw new Error("Scanning is not available here (it needs the full app build and a phone with NFC). Paste the link instead.");
+  }
   await NfcManager.start();
   try {
     await NfcManager.requestTechnology(NfcTech.Ndef);
