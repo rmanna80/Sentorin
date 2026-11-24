@@ -1,5 +1,9 @@
 import type NfcManagerType from "react-native-nfc-manager";
 
+// The address stored on every tag. Change this when the tap pages move to your own domain.
+export const TAP_BASE_URL = "https://rmanna80.github.io/Sentorin/";
+export const tapLink = (publicId: string) => `${TAP_BASE_URL}?d=${encodeURIComponent(publicId)}`;
+
 /** Accepts a full tap link (…?d=ID) or a bare device ID. */
 export function publicIdFromLink(text: string): string | null {
   const t = text.trim();
@@ -30,6 +34,27 @@ export async function readTagPublicId(): Promise<string | null> {
       } catch { /* not a link record */ }
     }
     return null;
+  } finally {
+    NfcManager.cancelTechnologyRequest().catch(() => {});
+  }
+}
+
+/** Waits for a blank or rewritable tag and stores this device's tap link on it. */
+export async function writeTagLink(publicId: string): Promise<void> {
+  let mod: typeof import("react-native-nfc-manager");
+  try {
+    mod = require("react-native-nfc-manager") as typeof import("react-native-nfc-manager");
+    if (!(await mod.default.isSupported())) throw new Error("unsupported");
+  } catch {
+    throw new Error("Writing tags needs the full app build and a phone with NFC.");
+  }
+  const { default: NfcManager, Ndef, NfcTech } = mod;
+  await NfcManager.start();
+  try {
+    await NfcManager.requestTechnology(NfcTech.Ndef);
+    const bytes = Ndef.encodeMessage([Ndef.uriRecord(tapLink(publicId))]);
+    if (!bytes) throw new Error("Could not prepare the link.");
+    await NfcManager.ndefHandler.writeNdefMessage(bytes);
   } finally {
     NfcManager.cancelTechnologyRequest().catch(() => {});
   }

@@ -4,7 +4,15 @@
 
 Quick look on any phone (no Bluetooth or NFC): install Expo Go, then `npx expo start --go` and scan the QR code.
 
-Full build (Bluetooth + NFC):
+Full build for iPhone from Windows (Bluetooth + NFC), using Expo's build service and an Apple Developer account:
+
+    npm install -g eas-cli
+    eas login
+    eas init
+    eas device:create                      # registers your iPhone
+    eas build --profile preview --platform ios
+
+Local full build (Android, or iOS on a Mac):
 
     npx expo install --fix      # aligns library versions with the Expo SDK
     npx expo run:android        # or run:ios  (Bluetooth needs a development build, not Expo Go)

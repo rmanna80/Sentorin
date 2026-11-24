@@ -3,6 +3,7 @@ import { PermissionsAndroid, Platform, Switch, Text, View } from "react-native";
 import type { BleManager } from "react-native-ble-plx";
 import * as Location from "expo-location";
 import { Device, has, supabase } from "./supabase";
+import TagWriter from "./TagWriter";
 import { Btn, Card, Err, Field, H, Muted, useC } from "./ui";
 
 // Must match firmware/src/main.c
@@ -111,6 +112,7 @@ export default function PenScreen({ device, onChanged }: { device: Device; onCha
           {saved ? <Muted>Saved.</Muted> : null}
         </Card>
       ) : null}
+      <TagWriter publicId={device.public_id} kind="pen" />
       <Err>{msg}</Err>
     </>
   );

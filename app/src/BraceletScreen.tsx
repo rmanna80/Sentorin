@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Switch, Text, View } from "react-native";
 import { Device, supabase } from "./supabase";
+import TagWriter from "./TagWriter";
 import { Btn, Card, Err, Field, H, Muted, useC } from "./ui";
 
 const FIELDS = [["full_name", "Name", false], ["blood_type", "Blood type", true], ["allergies", "Allergies", true], ["medications", "Medications", true],
@@ -59,6 +60,7 @@ export default function BraceletScreen({ device }: { device: Device }) {
           <Text key={r.id} style={{ color: c.ink, marginTop: 6 }}>{new Date(r.accessed_at).toLocaleString()} · responder {r.responder_code ?? "unknown"}</Text>
         ))}
       </Card>
+      <TagWriter publicId={device.public_id} kind="bracelet" />
     </>
   );
 }
