@@ -1,0 +1,2 @@
+schematic netlist (kicad-cli export) == board pad nets: True
+nets: ['DCC', 'DCDC_MID', 'DEC4', 'GND', 'SWDCLK', 'SWDIO', 'VBAT', 'VDD']

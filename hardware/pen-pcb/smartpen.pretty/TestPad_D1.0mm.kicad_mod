@@ -1,0 +1,13 @@
+(footprint "TestPad_D1.0mm" (version 20221018) (generator pcbnew)
+  (layer "F.Cu")
+  (attr smd exclude_from_pos_files exclude_from_bom)
+  (fp_text reference "REF**" (at 0 0) (layer "F.Fab") hide
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    (tstamp 7ebc8cf0-0f37-42fe-be40-aec2f6d8617f)
+  )
+  (fp_text value "GND" (at 0 0) (layer "F.Fab") hide
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    (tstamp a5be55bd-ef00-4bd3-8c41-14dbd5d1cf2c)
+  )
+  (pad "1" smd circle (at 0 0) (size 1 1) (layers "F.Cu" "F.Mask") (tstamp d29f91e4-63c3-44de-b959-2c44507b67d8))
+)

@@ -1,0 +1,14 @@
+(footprint "BatteryPad_1.2x3.0mm" (version 20221018) (generator pcbnew)
+  (layer "F.Cu")
+  (attr smd exclude_from_pos_files exclude_from_bom)
+  (fp_text reference "REF**" (at 0 0) (layer "F.Fab") hide
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    (tstamp ba19b003-c989-42db-b954-66164a7b1565)
+  )
+  (fp_text value "BAT-" (at 0 0) (layer "F.Fab") hide
+      (effects (font (size 1.27 1.27) (thickness 0.15)))
+    (tstamp cebf13f8-b570-415f-9eb6-d5b02a92ead4)
+  )
+  (pad "1" smd rect (at 0 0) (size 1.2 3) (layers "F.Cu" "F.Mask")
+    (thermal_bridge_angle 45) (tstamp 052f3fe4-15c4-4137-b19f-8ce30c57187b))
+)

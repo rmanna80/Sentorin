@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "smartpen")(type "KiCad")(uri "${KIPRJMOD}/smartpen.kicad_sym")(options "")(descr "Smart pen symbols"))
+)

@@ -1,0 +1,8 @@
+node_modules/
+.expo/
+dist/
+build/
+*.kicad_prl
+.env
+.env.*
+!.env.example

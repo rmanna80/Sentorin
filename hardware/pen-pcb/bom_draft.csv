@@ -1,0 +1,9 @@
+Ref,Qty,Value,Package,Manufacturer part number,Side,Verification status
+U1,1,BC832 V1 BLE module,7.8x8.8 mm castellated+LGA,Fanstel BC832 (V1 revision),Top,Pinout per Fanstel datasheet; land pattern NOT checked against Fanstel files
+Q1,1,P-MOSFET 30 V,SOT-23,AOS AO3401A (LCSC C15127),Bottom,Verified against AOS datasheet: G1/S2/D3; RDS(on) < 85 mOhm at VGS -2.5 V
+L1,1,10 uH,0603,Taiyo Yuden LBMF1608T100K,Bottom,80 mA rated per owner's datasheet check (Nordic minimum 50 mA)
+L2,1,15 nH,0402,Taiyo Yuden HK100515NJ-T,Bottom,Named in the same Nordic DevZone thread; confirm on datasheet
+C1 C2,2,47 uF 6.3 V X5R,0805,Murata GRM21BR60J476ME15L,Bottom,From memory - confirm; measure leakage and capacitance at 3 V bias
+C3,1,100 nF 16 V X7R,0402,Samsung CL05B104KO5NNNC,Bottom,From memory - confirm
+J1 J2,2,Battery contact pads 1.2x3.0 mm,PCB pad,n/a (custom formed contacts),Top rear,Contact parts not designed
+TP1 TP2 TP4 TP5,4,Test pads 1.0 mm,PCB pad,n/a,Bottom,-
