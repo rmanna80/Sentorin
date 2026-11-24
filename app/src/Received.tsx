@@ -5,7 +5,7 @@ import { supabase } from "./supabase";
 import { publicIdFromLink, readTagPublicId } from "./nfc";
 import { Btn, Card, Err, Field, H, Muted, useC } from "./ui";
 
-type CardData = { full_name?: string; title?: string; company?: string; phone?: string; email?: string; website?: string; bio?: string };
+type CardData = { full_name?: string; title?: string; company?: string; phone?: string; email?: string; website?: string; address?: string; bio?: string };
 type Saved = { public_id: string; card: CardData; saved_at: string };
 const KEY = "sentorin.received";
 
@@ -34,7 +34,7 @@ function CardView({ item, onRemove }: { item: Saved; onRemove: () => void }) {
         {d.company ? <Text style={{ color: c.muted }}>{d.company}</Text> : null}
         {d.bio ? <Text style={{ color: c.muted, textAlign: "center", marginTop: 8 }}>{d.bio}</Text> : null}
       </View>
-      {[["Phone", d.phone], ["Email", d.email], ["Website", d.website]].map(([label, value]) => value ? (
+      {[["Phone", d.phone], ["Email", d.email], ["Website", d.website], ["Address", d.address]].map(([label, value]) => value ? (
         <View key={label} style={{ borderTopWidth: 1, borderTopColor: c.line, paddingVertical: 8, marginTop: 8 }}>
           <Text style={{ color: c.muted, fontSize: 12 }}>{label}</Text>
           <Text style={{ color: c.ink, fontSize: 16 }} selectable>{value}</Text>

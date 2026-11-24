@@ -36,6 +36,7 @@ function vcard(c) {
   if (c.phone) lines.push(`TEL;TYPE=CELL:${esc(c.phone)}`);
   if (c.email) lines.push(`EMAIL:${esc(c.email)}`);
   if (c.website) lines.push(`URL:${esc(c.website)}`);
+  if (c.address) lines.push(`ADR;TYPE=WORK:;;${esc(c.address)};;;;`);
   if (c.bio) lines.push(`NOTE:${esc(c.bio)}`);
   lines.push("END:VCARD");
   return URL.createObjectURL(new Blob([lines.join("\r\n")], { type: "text/vcard" }));
@@ -58,7 +59,6 @@ function icon(name) {
 function safeUrl(raw) {
   try { const u = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`); return /^https?:$/.test(u.protocol) ? u.href : null; } catch { return null; }
 }
-const initials = (name) => (name || "").trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase() || "").join("") || "?";
 
 function renderPen(tap) {
   const nodes = [];
@@ -72,22 +72,34 @@ function renderPen(tap) {
       c.email && { key: "email", label: "Email", text: c.email, href: `mailto:${encodeURIComponent(c.email).replace(/%40/g, "@")}` },
       site && { key: "website", label: "Website", text: c.website.replace(/^https?:\/\//i, "").replace(/\/$/, ""), href: site, external: true },
     ].filter(Boolean);
-    const linkAttrs = (l) => (l.external ? { href: l.href, target: "_blank", rel: "noopener noreferrer" } : { href: l.href });
-    nodes.push(el("article", { class: "bcard" },
-      el("div", { class: "bcard-band" }),
-      el("div", { class: "bcard-body" },
-        el("div", { class: "avatar", "aria-hidden": "true" }, initials(c.full_name)),
-        el("h1", {}, c.full_name || "Contact"),
-        c.title ? el("p", { class: "role" }, c.title) : null,
-        c.company ? el("p", { class: "company" }, c.company) : null,
-        c.bio ? el("p", { class: "bio" }, c.bio) : null,
-        links.length ? el("div", { class: "quick" }, ...links.map((l) => el("a", { ...linkAttrs(l), class: "quick-btn", "aria-label": `${l.label} ${c.full_name || ""}`.trim() }, icon(l.key), el("span", {}, l.label)))) : null,
-        links.length ? el("ul", { class: "rows" }, ...links.map((l) => el("li", {}, el("a", linkAttrs(l), icon(l.key), el("span", { class: "row-text" }, el("small", {}, LABELS[l.key]), l.text))))) : null,
-        el("a", { class: "btn", href: vcard(c), download: `${(c.full_name || "contact").replace(/[^\w-]+/g, "_")}.vcf` }, "Save to contacts"))),
+    const attrs = (l) => (l.external ? { href: l.href, target: "_blank", rel: "noopener noreferrer" } : { href: l.href });
+    // The card itself: a traditional printed business card.
+    nodes.push(el("article", { class: "tcard" },
+      el("h1", {}, c.full_name || "Contact"),
+      c.title ? el("p", { class: "tc-title" }, c.title) : null,
+      c.company ? el("p", { class: "tc-company" }, c.company) : null,
+      el("div", { class: "tc-rule", "aria-hidden": "true" }),
+      links.length ? el("p", { class: "tc-contact" }, ...links.flatMap((l, n) => [n ? el("span", { class: "sep", "aria-hidden": "true" }, "|") : null, el("a", attrs(l), l.text)])) : null,
+      c.address ? el("p", { class: "tc-address" }, c.address) : null));
+    if (c.bio) nodes.push(el("p", { class: "tc-bio" }, c.bio));
+    nodes.push(el("div", { class: "actions" },
+      el("a", { class: "btn", href: vcard(c), download: `${(c.full_name || "contact").replace(/[^\w-]+/g, "_")}.vcf` }, "Save to contacts"),
+      links.length ? el("div", { class: "quick" }, ...links.map((l) => el("a", { ...attrs(l), class: "quick-btn", "aria-label": `${l.label} ${c.full_name || ""}`.trim() }, icon(l.key), el("span", {}, l.label)))) : null),
       el("p", { class: "foot" }, "Shared with a Sentorin pen"));
   }
   show(...nodes);
+  fitContactLine();
 }
+
+// One line with dividers when it fits (like a printed card); otherwise one item per line, no stray dividers.
+function fitContactLine() {
+  const line = document.querySelector(".tc-contact");
+  if (!line) return;
+  line.classList.remove("stacked");
+  const tops = [...line.querySelectorAll("a")].map((a) => a.offsetTop);
+  if (new Set(tops).size > 1) line.classList.add("stacked");
+}
+addEventListener("resize", fitContactLine);
 
 function renderBracelet(tap, message) {
   const pub = tap.public || {};

@@ -10,9 +10,9 @@ import { Btn, Card, Err, Field, H, Muted, useC } from "./ui";
 export const SENTORIN_SERVICE_UUID = "7e570001-5a4e-4f52-8a11-53454e544f52";
 const advertisedName = (publicId: string) => `STN-${publicId}`;
 
-const CARD_FIELDS = [["full_name", "Name"], ["title", "Title"], ["company", "Company"], ["phone", "Phone"], ["email", "Email"], ["website", "Website"], ["bio", "About"]] as const;
+const CARD_FIELDS = [["full_name", "Name"], ["title", "Title"], ["company", "Company"], ["phone", "Phone"], ["email", "Email"], ["website", "Website"], ["address", "Address"], ["bio", "About"]] as const;
 type CardRow = Record<(typeof CARD_FIELDS)[number][0], string> & { is_published: boolean };
-const EMPTY: CardRow = { full_name: "", title: "", company: "", phone: "", email: "", website: "", bio: "", is_published: false };
+const EMPTY: CardRow = { full_name: "", title: "", company: "", phone: "", email: "", website: "", address: "", bio: "", is_published: false };
 
 function proximity(rssi: number) {
   if (rssi > -55) return "Very close";
