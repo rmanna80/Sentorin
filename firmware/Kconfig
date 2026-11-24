@@ -1,0 +1,13 @@
+source "Kconfig.zephyr"
+
+config SENTORIN_PUBLIC_ID
+	string "Fallback device public ID (used when UICR is not programmed)"
+	default "DEV00001"
+
+config SENTORIN_ADV_INTERVAL_MS
+	int "Advertising interval, ms"
+	default 2000
+
+config SENTORIN_LOW_BATT_MV
+	int "Below this supply voltage, advertise 5x slower"
+	default 2100

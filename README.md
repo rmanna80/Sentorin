@@ -9,9 +9,9 @@ One platform for NFC/Bluetooth devices:
 |---|---|---|
 | `hardware/pen-pcb` | KiCad project, revision 0.3 candidate | Not released for fabrication (see its README) |
 | `backend/supabase` | Database schema, access rules, tests | Deployed to Supabase project `smartpen`; access tests pass there |
-| `web/` | Tap pages (business card, emergency) | Not started |
-| `app/` | Owner app, iPhone + Android | Not started |
-| `firmware/` | Pen firmware | Not started |
+| `web/` | Tap pages (business card, emergency sign-in) | Written; not yet opened in a browser or hosted |
+| `app/` | Owner app, iPhone + Android (Expo) | Typechecks and bundles; not yet run on a phone |
+| `firmware/` | Pen firmware v1 beacon (nRF Connect SDK) | Written; not compiled or run on hardware |
 
 ## Backend tests
 
