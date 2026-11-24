@@ -41,15 +41,50 @@ function vcard(c) {
   return URL.createObjectURL(new Blob([lines.join("\r\n")], { type: "text/vcard" }));
 }
 
+// Static icon paths (not user data), drawn with DOM calls.
+const ICONS = {
+  phone: "M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z",
+  email: "M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zm8 7.2L20 7H4z",
+  website: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 6h-2.95a15.7 15.7 0 0 0-1.38-3.56A8.03 8.03 0 0 1 18.9 8zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14a8.2 8.2 0 0 1 0-4h3.38a16.5 16.5 0 0 0 0 4zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56A7.99 7.99 0 0 1 5.08 16zm2.95-8H5.08a7.99 7.99 0 0 1 4.33-3.56A15.7 15.7 0 0 0 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66a14.7 14.7 0 0 1 0-4h4.68a14.7 14.7 0 0 1 0 4zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56zM16.36 14a16.5 16.5 0 0 0 0-4h3.38a8.2 8.2 0 0 1 0 4z",
+};
+function icon(name) {
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24"); svg.setAttribute("aria-hidden", "true");
+  const p = document.createElementNS(NS, "path"); p.setAttribute("d", ICONS[name]); svg.append(p);
+  return svg;
+}
+// Only http(s) links are ever made clickable.
+function safeUrl(raw) {
+  try { const u = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`); return /^https?:$/.test(u.protocol) ? u.href : null; } catch { return null; }
+}
+const initials = (name) => (name || "").trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase() || "").join("") || "?";
+
 function renderPen(tap) {
   const nodes = [];
-  if (tap.lost) nodes.push(card(el("p", { class: "alert" }, "This pen has been reported lost."), el("p", { class: "muted" }, "If you found it, the owner's contact details are below.")));
+  if (tap.lost) nodes.push(el("section", { class: "notice" }, el("strong", {}, "This pen has been reported lost."), el("span", {}, " If you found it, please contact its owner below.")));
   if (!tap.card) nodes.push(card(el("h1", {}, "Sentorin pen"), el("p", { class: "muted" }, "The owner has not published a card yet.")));
   else {
     const c = tap.card;
-    nodes.push(card(el("h1", {}, c.full_name || "Contact"), el("p", { class: "muted" }, [c.title, c.company].filter(Boolean).join(" · ")),
-      fields(c, ["phone", "email", "website", "bio"]),
-      el("a", { class: "btn", href: vcard(c), download: `${(c.full_name || "contact").replace(/[^\w-]+/g, "_")}.vcf` }, "Save contact")));
+    const site = c.website ? safeUrl(c.website) : null;
+    const links = [
+      c.phone && { key: "phone", label: "Call", text: c.phone, href: `tel:${c.phone.replace(/[^\d+]/g, "")}` },
+      c.email && { key: "email", label: "Email", text: c.email, href: `mailto:${encodeURIComponent(c.email).replace(/%40/g, "@")}` },
+      site && { key: "website", label: "Website", text: c.website.replace(/^https?:\/\//i, "").replace(/\/$/, ""), href: site, external: true },
+    ].filter(Boolean);
+    const linkAttrs = (l) => (l.external ? { href: l.href, target: "_blank", rel: "noopener noreferrer" } : { href: l.href });
+    nodes.push(el("article", { class: "bcard" },
+      el("div", { class: "bcard-band" }),
+      el("div", { class: "bcard-body" },
+        el("div", { class: "avatar", "aria-hidden": "true" }, initials(c.full_name)),
+        el("h1", {}, c.full_name || "Contact"),
+        c.title ? el("p", { class: "role" }, c.title) : null,
+        c.company ? el("p", { class: "company" }, c.company) : null,
+        c.bio ? el("p", { class: "bio" }, c.bio) : null,
+        links.length ? el("div", { class: "quick" }, ...links.map((l) => el("a", { ...linkAttrs(l), class: "quick-btn", "aria-label": `${l.label} ${c.full_name || ""}`.trim() }, icon(l.key), el("span", {}, l.label)))) : null,
+        links.length ? el("ul", { class: "rows" }, ...links.map((l) => el("li", {}, el("a", linkAttrs(l), icon(l.key), el("span", { class: "row-text" }, el("small", {}, LABELS[l.key]), l.text))))) : null,
+        el("a", { class: "btn", href: vcard(c), download: `${(c.full_name || "contact").replace(/[^\w-]+/g, "_")}.vcf` }, "Save to contacts"))),
+      el("p", { class: "foot" }, "Shared with a Sentorin pen"));
   }
   show(...nodes);
 }
