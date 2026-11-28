@@ -1,0 +1,7 @@
+Comment,Designator,Qty,Footprint,LCSC Part #,Manufacturer,Manufacturer part number,Verification notes
+47uF 6.3V X5R 20%,"C1,C2",2,C_0805_2012Metric,C77072,Murata,GRM21BR60J476ME15L,LCSC number confirmed. One distributor (TTI) lists this part as end of life: check JLCPCB stock at order time.
+100nF 16V X7R 10%,C3,1,C_0402_1005Metric,C1525,Samsung Electro-Mechanics,CL05B104KO5NNNC,LCSC number confirmed. JLCPCB basic part.
+10uH 80mA 0603,L1,1,L_0603_1608Metric,C87216,Taiyo Yuden,LBMF1608T100K,"LCSC number confirmed. 80 mA rated, 0.36 ohm typical."
+15nH 5% 0402,L2,1,L_0402_1005Metric,C86059,Murata,LQG15HS15NJ02D,"LCSC number confirmed. CHANGED from Taiyo Yuden HK100515NJ-T, which is obsolete and out of stock at LCSC."
+AO3401A P-MOSFET,Q1,1,SOT-23,C15127,Alpha & Omega Semiconductor,AO3401A,LCSC number confirmed. JLCPCB basic part.
+BC832 V1 BLE module,U1,1,BC832_V1_pen,,Fanstel,BC832 (hardware V1),NO LCSC NUMBER ASSIGNED ON PURPOSE. Not found in the JLCPCB/LCSC catalogue; supply it yourself (consigned) or ask JLCPCB to source it. Do not accept EV-BC832 (C17479822): that is the evaluation board. Fanstel now lists BC832 as not recommended for new designs and points to BC832-p: confirm with Fanstel before buying.
